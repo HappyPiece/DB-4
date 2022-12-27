@@ -1,0 +1,157 @@
+#navbar-anchor {
+  padding: var(--default-padding);
+
+  z-index: 1;
+  display: flex;
+  flex-flow: row wrap;
+  height: fit-content;
+}
+
+.navbar-container {
+  flex: 1 1;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: center;
+}
+
+.navbar-container .title {
+  font-size: 2rem;
+}
+
+#content-anchor {
+  padding: var(--default-padding);
+  flex: 1 1;
+  z-index: 0;
+  display: flex;
+  row-gap: 1rem;
+}
+
+.content-container {
+  flex: 1 1;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: flex-start;
+  row-gap: 1rem;
+}
+
+#main-button {
+  flex: 1 1 100%;
+  flex-flow: row wrap;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  font-size: 2rem;
+}
+
+.output {
+  flex: 1 1 100%;
+  table-layout: auto;
+  border-spacing: 0rem;
+  padding: var(--default-padding);
+}
+
+.row {
+}
+
+.cell {
+  border-bottom: solid 0.07rem var(--faded-rich-black-FOGRA-29);
+  border-right: solid 0.07rem var(--faded-rich-black-FOGRA-29);
+  border-radius: 0rem;
+  width: 10%;
+  vertical-align: top;
+}
+
+.cell-content {
+  height: 100% !important;
+  width: 100%;
+  padding: calc(var(--default-padding)/2);
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.row:first-child .cell .cell-content {
+  justify-content: flex-start;
+}
+
+.cell:first-child .cell-content {
+  justify-content: center;
+  align-content: center;
+}
+
+.row:first-child .cell {
+
+}
+
+.row:last-child .cell {
+  border-bottom: none;
+}
+
+.cell:first-child {
+  width: 5%;
+}
+
+.cell:last-child {
+  border-right: none;
+}
+
+.class {
+  flex: 1 1 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: center;
+  padding: calc(var(--default-padding));
+  margin: calc(var(--default-padding)/2);
+  color: var(--alt-text);
+  border-radius: var(--default-border-radius);
+  row-gap: calc(var(--default-padding)/2);
+}
+
+.class[type="Lecture"]
+{
+  background-color: var(--sinopia);
+}
+
+
+.class[type="Laboratory"]
+{
+  background-color: var(--little-boy-blue);
+}
+
+.class[type="Practice"]
+{
+  background-color: var(--celadon-green);
+}
+
+.class[type="Other"]
+{
+  background-color: var(--little-boy-blue);
+}
+
+.class-name {
+  flex: 1 1 100%;
+  font-size: 1.1rem;
+}
+
+.cluster-number {
+  flex: 1 1 100%;
+  font-size: 0.8rem;
+}
+
+.date-day {
+  font-size: 1.3rem;
+}
+
+.date-date {
+  font-size: 0.8rem;
+}
+
+.start {
+
+}
+
+.end {
+  font-size: 0.8rem;
+}

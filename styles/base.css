@@ -1,0 +1,55 @@
+:root {
+  --celadon-green: #00887a;
+  --melon: #ffccbc;
+  --coral: #ff825c;
+  --white: #ffffff;
+  --periwinkle-crayola: #d3e3fc;
+  --little-boy-blue: #77a6f7;
+  --rich-black-FOGRA-29: #001524;
+  --faded-rich-black-FOGRA-29: #00152433;
+  --sinopia: #cc3000;
+
+  --primary-text: var(--rich-black-FOGRA-29);
+  --primary-background: var(--white);
+  --alt-text: var(--white);
+  --alt-background: var(--little-boy-blue);
+  --primary-accent: var(--celadon-green);
+  --alt-accent: var(--little-boy-blue);
+
+  --default-border-radius: 0.375rem;
+  --default-padding: 0.5rem;
+}
+
+html {
+  height: 100%;
+  font-size: 1rem;
+}
+
+body {
+  height: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  background-color: var(--primary-background);
+  color: var(--primary-text);
+  font-family: "Roboto Flex";
+  user-select: none;
+  border-radius: var(--default-border-radius);
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  transition: all 0.1s ease-in-out;
+  -webkit-transition: all 0.1s ease-in-out;
+  -ms-transition: all 0.1s ease-in-out;
+  position: relative;
+  border-radius: inherit;
+}
+
+:focus-visible {
+  outline: none;
+}
+
+.template {
+  display: none !important;
+}
