@@ -4,12 +4,14 @@
   --coral: #ff825c;
   --white: #ffffff;
   --periwinkle-crayola: #d3e3fc;
+  --faded-periwinkle-crayola: #d3e3fc77;
   --little-boy-blue: #77a6f7;
   --rich-black-FOGRA-29: #001524;
-  --faded-rich-black-FOGRA-29: #00152433;
+  --light-rich-black-FOGRA-29: #001524dd;
+  --dead-rich-black-FOGRA-29: #00152433;
   --sinopia: #cc3000;
 
-  --primary-text: var(--rich-black-FOGRA-29);
+  --primary-text: var(--light-rich-black-FOGRA-29);
   --primary-background: var(--white);
   --alt-text: var(--white);
   --alt-background: var(--little-boy-blue);
@@ -26,24 +28,24 @@ html {
 }
 
 body {
+  position: relative;
   height: 100%;
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: row wrap;
   background-color: var(--primary-background);
   color: var(--primary-text);
-  font-family: "Roboto Flex";
+  font-family: "Roboto Flex" !important;
   user-select: none;
-  border-radius: var(--default-border-radius);
   margin: 0;
 }
 
 * {
+  z-index: 1;
   box-sizing: border-box;
   transition: all 0.1s ease-in-out;
   -webkit-transition: all 0.1s ease-in-out;
   -ms-transition: all 0.1s ease-in-out;
   position: relative;
-  border-radius: inherit;
 }
 
 :focus-visible {

@@ -29,20 +29,27 @@ let types = new Array(
   new Type("Другое", "Other")
 );
 
+let Templates;
+
 $(document).ready(async function () {
-  await managePage();
+  Templates = $("#templates-container").clone();
+  Templates.load("/templates.html", async () => {
+    await managePage();
+  });
 });
 
 async function managePage() {
+  let lastCluster = localStorage.getItem("lastCluster");
+  if (lastCluster !== null && lastCluster !== undefined) {
+    $(".group-input").val(lastCluster);
+  }
   assignListeners();
 }
 
 export function retrieveTemplateById(id) {
-  let template = $("#" + id).clone();
+  let template = Templates.find("#" + id).clone();
   template.removeAttr("id");
   template.removeClass("template");
-  // console.log(id);
-  // console.log(template.length);
   return template;
 }
 
@@ -50,19 +57,126 @@ async function assignListeners() {
   $("*").off();
 
   $("#main-button").on("click", loadSchedule);
-  $(".title").on("click", doThings);
+
+  $("#add-class-button").on("click", tryAddClass);
+
+  $(".group-text").on("click", doThings);
+
+  $("#group-input").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+      $("#main-button").click();
+      $("#group-input").blur();
+    }
+  });
+
+  $("body").on("keyup", function (event) {
+    if ((event.keyCode === 107 || event.keyCode === 187) && event.altKey) {
+      openDialog();
+    }
+  });
+
+  $("body").on("keyup", function (event) {
+    if ((event.keyCode === 109 || event.keyCode === 189) && event.altKey) {
+      closeDialog();
+    }
+  });
 }
 
-async function doThings() {
-  await addClass("972103", 3, "2022-12-28", "Practice", "Основы системного администрирования");
+async function doThings()
+{
+  await addClass(new Class("9721", 3, "2022-12-26", "Practice", "Кринж"));
+}
+
+async function tryAddClass() {
+  let cluster = $("#dialog-cluster").val();
+  let timeSlot = $("#dialog-time-slot").val();
+  let date = CommonServices.purgeDate($("#dialog-date").val(), "-");
+  console.log($("#dialog-type").val());
+  let type;
+  if (types.find((x) => x.name === $("#dialog-type").val()) !== undefined) {
+    type = types.find((x) => x.name === $("#dialog-type").val()).codename;
+  } else {
+    type = undefined;
+  }
+  console.log(type);
+  let name = $("#dialog-name").val();
+
+  let newClass = new Class(cluster, timeSlot, date, type, name);
+
+  localStorage.setItem("lastClass", JSON.stringify(newClass));
+
+  let responce = await addClass(newClass);
+  if (responce) {
+    await closeDialog();
+  } else {
+  }
+}
+
+async function closeDialog() {
+  $("#add-class-dialog").remove();
+  $("#dialog-cover").remove();
+}
+
+async function openDialog() {
+  if ($("#add-class-dialog").length !== 0) {
+    return;
+  }
+
+  let cover = retrieveTemplateById("cover-template");
+  cover.attr("id", "dialog-cover");
+  $("body").append(cover);
+
+  let dialog = retrieveTemplateById("dialog-anchor-template");
+  dialog.attr("id", "add-class-dialog");
+
+  let lastClass = JSON.parse(localStorage.getItem("lastClass"));
+  if (lastClass !== null && lastClass !== undefined) {
+    dialog.find("#dialog-cluster").val(lastClass.clusterNumber);
+    dialog.find("#dialog-time-slot").val(lastClass.timeSlot);
+
+    dialog.find("#dialog-date").val(CommonServices.purgeDate(lastClass.date, "-", "yyyy-mm-dd"));
+    console.log(dialog.find("#dialog-date").val());
+
+    if (types.find((x) => x.codename === lastClass.type) !== undefined) {
+      dialog.find("#dialog-type").val(types.find((x) => x.codename === lastClass.type).name);
+    } else {
+      dialog.find("#dialog-type").val("Другое");
+    }
+    dialog.find("#dialog-name").val(lastClass.name);
+  }
+
+  $("body").append(dialog);
+
+  await assignListeners();
+}
+
+function throwMessage(container, emoji, text) {
+  container.empty();
+
+  let _message = retrieveTemplateById("message-anchor-template");
+  let _emoji = retrieveTemplateById(emoji);
+  _message.find(".message-emoji").append(_emoji);
+  _message.find(".message-text").html(text);
+  container.append(_message);
 }
 
 async function loadSchedule() {
-  let table = $(".output");
-  table.empty();
+  let number = $(".group-input").val();
+  localStorage.setItem("lastCluster", number);
+
+  $(".content-container").empty();
+  let q = await query(ref(db, "Cluster/"), orderByChild("number"), equalTo(number));
+  let snapshot = await get(q);
+  if (!snapshot.exists()) {
+    throwMessage($(".content-container"), "shruggie", "Нет такой группы");
+    return;
+  }
+
+  let output = retrieveTemplateById("output-anchor-template");
+  $(".content-container").append(output);
+  let table = output.find(".output");
 
   let week = getWeek(new Date());
-  console.log(week);
   let timeSlots = await getTimeSlots();
 
   let _row = retrieveTemplateById("row-template");
@@ -81,6 +195,10 @@ async function loadSchedule() {
       cell.attr("pos", `cell-${day}`);
       row.append(cell);
 
+      if (timeSlot === 0 && day === 0) {
+        // let button = retrieveTemplateById("plus-text-button-template");
+        // cell.find(".cell-content").append(button);
+      }
       if (timeSlot === 0 && day !== 0) {
         let date = _date.clone();
         date.find(".date-day").html(days[new Date(week[day - 1]).getDay()]);
@@ -89,7 +207,6 @@ async function loadSchedule() {
       }
       if (timeSlot !== 0 && day === 0) {
         let theTimeSlot = _timeSlot.clone();
-        console.log(timeSlots);
         theTimeSlot.find(".start").html(timeSlots[timeSlot - 1].start);
         theTimeSlot.find(".end").html(timeSlots[timeSlot - 1].end);
         cell.find(".cell-content").append(theTimeSlot);
@@ -97,9 +214,7 @@ async function loadSchedule() {
     }
   }
 
-  let number = "972103";
   let clusters = await getAssociatedClusters(number);
-  // console.log(clusters);
 
   for (let day of week) {
     await processDateClasses(day, clusters);
@@ -107,12 +222,11 @@ async function loadSchedule() {
 }
 
 async function renderClass(theClass) {
-  console.log(theClass);
   let _class = retrieveTemplateById("class-template");
 
   _class.find(".class-name").html(theClass.name);
   _class.find(".cluster-number").html(theClass.clusterNumber);
-  _class.attr("type", (types.find(x => x.codename === theClass.type) !== undefined)?(theClass.type):("Other"));
+  _class.attr("type", types.find((x) => x.codename === theClass.type) !== undefined ? theClass.type : "Other");
   let day = new Date(theClass.date).getDay();
 
   $(`[pos=row-${theClass.timeSlot}]`).find(`[pos=cell-${day}]`).find(".cell-content").append(_class);
@@ -154,7 +268,6 @@ async function getTimeSlots() {
       result.push(timeSlot.val());
     });
   }
-  console.log(result);
   return result;
 }
 
@@ -220,10 +333,16 @@ async function getClusterSuperclusters(number) {
   return result;
 }
 
-// await addClass("972103", 2, CommonServices.purgeDate(new Date().toISOString()), null);
-async function addClass(clusterNumber, timeSlot, date, type, name) {
-  let reference = ref(db, "Class/" + `${clusterNumber}&${timeSlot}&${date}`);
-  set(reference, new Class(clusterNumber, timeSlot, date, type, name));
+async function addClass(newClass) {
+  console.log(newClass);
+  let reference = ref(db, "Class/" + `${newClass.clusterNumber}&${newClass.timeSlot}&${newClass.date}`);
+  try {
+    await set(reference, newClass);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
 async function addCluster(number, superclusterNumber) {

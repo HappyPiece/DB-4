@@ -1,0 +1,74 @@
+.dialog-anchor {
+  z-index: 3 !important;
+  border-radius: var(--default-border-radius);
+  background-color: var(--primary-background);
+  position: absolute;
+  height: 50%;
+  width: 50%;
+  top: 50%;
+  left: 50%;
+  row-gap: 0.5rem;
+  transform: translate(-50%, -50%);
+}
+
+.dialog-content {
+  height: 90%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  row-gap: 0.5rem;
+  border-right: var(--little-boy-blue) solid 1px;
+  border-top: var(--little-boy-blue) solid 1px;
+  border-left: var(--little-boy-blue) solid 1px;
+  border-top-left-radius: var(--default-border-radius);
+  border-top-right-radius: var(--default-border-radius);
+}
+
+.dialog-title {
+  padding: calc(var(--default-padding) * 2);
+
+  flex: 1 1 100%;
+  font-size: 1.7rem;
+}
+
+.dialog-input-container {
+  padding: calc(var(--default-padding) * 2);
+  flex: 1 1 50%;
+  display: flex;
+  flex-flow: row wrap;
+  margin-bottom: var(--default-padding);
+}
+
+.dialog-input-description {
+  color: var(--light-rich-black-FOGRA-29);
+  flex: 1 1 100%;
+  font-size: 1.2rem;
+}
+
+.dialog-input {
+  flex: 1 1 100%;
+  background: linear-gradient(var(--little-boy-blue), var(--little-boy-blue)) center bottom 0.1rem / calc(100% - 0.1rem) 1px no-repeat;
+  font-size: 1.5rem;
+}
+
+.dialog-input:focus-visible {
+  background: linear-gradient(0.25turn, var(--little-boy-blue), var(--little-boy-blue)) center bottom 0.1rem / calc(100% - 0.1rem) 0.1rem
+    no-repeat !important;
+}
+
+.dialog-bottom-button {
+  height: 10%;
+  border-bottom-right-radius: var(--default-border-radius);
+  border-bottom-left-radius: var(--default-border-radius);
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  padding: var(--default-padding);
+  border: 1px solid var(--little-boy-blue);
+  flex: 1 1 100%;
+}
+
+.dialog-bottom-button:hover {
+  color: var(--alt-text);
+  background-color: var(--little-boy-blue);
+}
